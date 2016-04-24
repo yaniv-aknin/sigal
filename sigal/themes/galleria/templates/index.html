@@ -102,9 +102,9 @@
         <div id="gallery">
           {% for media in album.medias %}
             {% if media.type == "image" %}
-              <a href="{{ media.filename }}">
+              <a href="{{ media.url }}">
                 <img src="{{ media.thumbnail }}" alt="{{ media.filename }}"
-                    data-title="{{ media.title if media.title else media.filename }}"
+                    data-title="{{ media.title }}"
                     data-description="{{ img_description(media) }}"
                     {% if media.big %} data-big="{{ media.big }}"{% endif %} />
               </a>
@@ -112,10 +112,10 @@
             {% if media.type == "video" %}
               <a href="{{ theme.url }}/img/empty.png">
                 <img src="{{ media.thumbnail }}" alt="{{ media.filename }}"
-                    data-title="{{ media.title if media.title else media.filename }}"
+                    data-title="{{ media.title }}"
                     data-description="{{ img_description(media) }}"
                     data-layer="<video controls>
-                                  <source src='{{ media.filename }}' type='{{ media.mime }}' />
+                                  <source src='{{ media.url }}' type='{{ media.mime }}' />
                                 </video>" />
               </a>
             {% endif %}

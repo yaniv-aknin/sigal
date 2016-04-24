@@ -7,6 +7,7 @@ import pytest
 import datetime
 
 from os.path import join
+from sigal.compat import url_quote
 from sigal.gallery import Album, Media, Image, Video, Gallery
 from sigal.video import SubprocessException
 
@@ -56,7 +57,7 @@ REF = {
     u'accentué': {
         'title': u'accentué',
         'name': u'accentué',
-        'thumbnail': u'accentué/thumbnails/hélicoïde.tn.jpg',
+        'thumbnail': u'accentué/thumbnails/h%C3%A9lico%C3%AFde.tn.jpg',
         'subdirs': [],
         'medias': [u'hélicoïde.jpg', 'superdupont_source_wikipedia_en.jpg'],
     },
@@ -64,7 +65,7 @@ REF = {
         'title': 'video',
         'name': 'video',
         'thumbnail': ('video/thumbnails/'
-                      'stallman software-freedom-day-low.tn.jpg'),
+                      'stallman%20software-freedom-day-low.tn.jpg'),
         'subdirs': [],
         'medias': ['stallman software-freedom-day-low.ogv']
     }
@@ -102,8 +103,7 @@ def test_media_orig(settings, tmpdir):
 
     m = Video('stallman software-freedom-day-low.ogv', 'video', settings)
     assert m.filename == 'stallman software-freedom-day-low.webm'
-    assert m.big == 'original/stallman software-freedom-day-low.ogv'
-    assert os.path.isfile(join(settings['destination'], m.path, m.big))
+    assert m.big == url_quote('original/stallman software-freedom-day-low.ogv')
 
     settings['use_orig'] = True
 
@@ -131,7 +131,7 @@ def test_video(settings, tmpdir):
 
     os.makedirs(join(settings['destination'], 'video', 'thumbnails'))
     assert m.thumbnail == join('thumbnails',
-                               'stallman software-freedom-day-low.tn.jpg')
+                               'stallman%20software-freedom-day-low.tn.jpg')
     assert os.path.isfile(m.thumb_path)
 
 

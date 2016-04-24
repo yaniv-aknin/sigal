@@ -27,7 +27,7 @@ from markdown import Markdown
 from markupsafe import Markup
 from subprocess import Popen, PIPE
 
-from . import compat
+from .compat import PY2, url_quote
 
 VIDEO_MIMES = {'.mp4': 'video/mp4',
                '.webm': 'video/webm',
@@ -62,10 +62,9 @@ def check_or_create_dir(path):
 def url_from_path(path):
     """Transform path to url, converting backslashes to slashes if needed."""
 
-    if os.sep == '/':
-        return path
-    else:
-        return '/'.join(path.split(os.sep))
+    if os.sep != '/':
+        path = '/'.join(path.split(os.sep))
+    return url_quote(path)
 
 
 def read_markdown(filename):
@@ -100,7 +99,7 @@ def call_subprocess(cmd):
     p = Popen(cmd, stdout=PIPE, stderr=PIPE)
     stdout, stderr = p.communicate()
 
-    if not compat.PY2:
+    if not PY2:
         stderr = stderr.decode('utf8')
         stdout = stdout.decode('utf8')
     return p.returncode, stdout, stderr
