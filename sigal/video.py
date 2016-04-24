@@ -21,7 +21,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from __future__ import with_statement
+from __future__ import with_statement, print_function
 
 import logging
 import os
@@ -44,6 +44,7 @@ def check_subprocess(cmd, source, outname):
 
     """
     logger = logging.getLogger(__name__)
+    print(cmd)
     try:
         returncode, stdout, stderr = call_subprocess(cmd)
     except KeyboardInterrupt:
@@ -55,6 +56,8 @@ def check_subprocess(cmd, source, outname):
     if returncode:
         logger.debug('STDOUT:\n %s', stdout)
         logger.debug('STDERR:\n %s', stderr)
+        print(stdout)
+        print(stderr)
         if os.path.isfile(outname):
             logger.debug('Removing file %s', outname)
             os.remove(outname)
