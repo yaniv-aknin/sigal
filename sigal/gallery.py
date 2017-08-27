@@ -4,6 +4,7 @@
 # Copyright (c) 2013      - Christophe-Marie Duquesne
 # Copyright (c) 2014      - Jonas Kaufmann
 # Copyright (c) 2015      - François D.
+# Copyright (c) 2017      - Yaniv Aknin
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -678,12 +679,17 @@ class Gallery(object):
 
         if failed_files:
             self.remove_files(failed_files)
-        print('')
+            print('')
 
         if self.settings['write_html']:
             writer = Writer(self.settings, index_title=self.title)
-            for album in self.albums.values():
-                writer.write(album)
+            with progressbar(self.albums.values(), label="Writing albums",
+                             show_eta=len(self.albums) > 100,
+                             file=self.progressbar_target) as albums:
+                for album in albums:
+                    writer.write(album)
+
+        print('')
 
         signals.gallery_build.send(self)
 
